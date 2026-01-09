@@ -21,29 +21,22 @@ body {
   outline: none;
   background-color: #ffffff;
   border: 1px solid rgba(0,0,0,0.05);
-  margin: 16px auto 0 auto; 
+  margin: 16px auto 4px auto; 
   width: var(--a4-width);
   min-height: var(--a4-height);
   padding: var(--edyx-mt) var(--edyx-mr) var(--edyx-mb) var(--edyx-ml);
-  
   white-space: pre-wrap !important;
   word-wrap: break-word !important;
   overflow-wrap: break-word !important;
   line-height: 1.5;
-
   background-image: repeating-linear-gradient(
     to bottom,
     transparent,
-    transparent calc(var(--a4-height) - 1px),
-    #f0ede9 calc(var(--a4-height) - 1px),
+    transparent calc(var(--a4-height) - 2px),
+    #f0ede9 calc(var(--a4-height) - 2px),
     #f0ede9 var(--a4-height)
   );
   background-size: 100% var(--a4-height);
-}
-
-.ProseMirror p {
-  margin: 0;
-  min-height: 1em;
 }
 
 .ProseMirror ul {

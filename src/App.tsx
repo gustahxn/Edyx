@@ -11,7 +11,6 @@ import {
   Settings,
   ChevronDown,
   ChevronUp,
-  Highlighter,
   Type,
   Maximize2,
   MousePointer2,
@@ -24,14 +23,13 @@ import {
   Copy,
   Scissors,
   ClipboardPaste,
-  Check,
   X,
   Globe,
   FileDown,
   Download,
   FileText,
 } from "lucide-react";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 interface ToolbarBtnProps {
   children: React.ReactNode;
@@ -89,6 +87,9 @@ const translations = {
       line: "Entrelinhas",
       pdf: "PDF",
       docx: "DOCX",
+      left: "Esquerda",
+      center: "Centro",
+      right: "Direita",
     },
   },
   en: {
@@ -132,6 +133,9 @@ const translations = {
       line: "Line Height",
       pdf: "PDF",
       docx: "DOCX",
+      left: "Left",
+      center: "Center",
+      right: "Right",
     },
   },
 };
@@ -245,18 +249,19 @@ function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           content: editor?.getHTML(),
-          title: "Documento_Edyx",
           margins: { t: mT, b: mB, l: mL, r: mR },
         }),
       });
+      if (!response.ok) throw new Error();
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `Documento_Edyx.${type === "pdf" ? "pdf" : "doc"}`;
+      a.download = `Documento_Edyx.${type === "pdf" ? "pdf" : "docx"}`;
       a.click();
+      window.URL.revokeObjectURL(url);
     } catch {
-      alert("Erro ao exportar. Verifique se o servidor Go está rodando.");
+      alert("Erro ao exportar.");
     }
   };
 
@@ -273,17 +278,18 @@ function App() {
   };
 
   return (
-    <div className="h-screen w-full flex flex-col bg-[#f5f2ed] text-[#1a1a1a] font-sans selection:bg-[#f8d7da]">
+    <div className="h-screen w-full flex flex-col bg-[#f0ede9] text-[#1a1a1a] font-sans selection:bg-[#e6e0d5]">
       <header className="bg-[#fcfaf7] border-b border-[#dad4c9] z-40 select-none relative shadow-none">
         <div className="max-w-screen-2xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <img
-              src="/logoo.png"
-              alt="Logo"
-              className="h-20 mt-3 w-auto object-contain"
-            />
+            <div className="flex items-center pr-2">
+              <img
+                src="/logoo.png"
+                alt="Logo"
+                className="h-20 mt-3 w-auto object-contain"
+              />
+            </div>
             <div className="w-px h-8 bg-[#dad4c9] mx-2" />
-
             <div className="flex gap-0.5">
               <ToolbarBtn
                 onClick={() => editor.chain().focus().undo().run()}
@@ -300,8 +306,7 @@ function App() {
                 <Redo2 size={15} />
               </ToolbarBtn>
             </div>
-
-            <div className="flex bg-[#efebe4] p-1 rounded-sm gap-0.5 ml-2 border border-black/5">
+            <div className="flex bg-[#efebe4] p-1 rounded-sm gap-0.5 ml-2 border border-black/5 shadow-none">
               <ToolbarBtn
                 onClick={() => editor.chain().focus().toggleBold().run()}
                 active={editor.isActive("bold")}
@@ -327,9 +332,7 @@ function App() {
                 <Underline size={15} />
               </ToolbarBtn>
             </div>
-
             <div className="w-px h-8 bg-[#dad4c9] mx-2" />
-
             <div className="flex items-center gap-6">
               <div className="flex flex-col">
                 <div className="flex items-center gap-1.5 mb-1 text-[#6a665c]">
@@ -369,9 +372,7 @@ function App() {
                 </select>
               </div>
             </div>
-
             <div className="w-px h-8 bg-[#dad4c9] mx-2" />
-
             <div className="flex items-center gap-8">
               <div className="relative">
                 <button
@@ -379,13 +380,13 @@ function App() {
                     e.stopPropagation();
                     setShowColor(!showColor);
                   }}
-                  className="flex flex-col items-start group cursor-pointer"
+                  className="flex flex-col items-start group cursor-pointer shadow-none"
                 >
                   <span className="text-[8px] font-bold text-[#6a665c] uppercase mb-1 tracking-widest group-hover:text-black">
                     {t.color}
                   </span>
                   <div
-                    className="w-10 h-1.5 border border-black/10 shadow-none"
+                    className="w-10 h-1.5 border border-black/10"
                     style={{ backgroundColor: attrs.color || "#1a1a1a" }}
                   />
                 </button>
@@ -401,7 +402,7 @@ function App() {
                           editor.chain().focus().setColor(c).run();
                           setShowColor(false);
                         }}
-                        className="w-6 h-6 border border-zinc-100 hover:border-black hover:scale-110 transition-all"
+                        className="w-6 h-6 border border-zinc-100 hover:border-black hover:scale-110 transition-all rounded-sm"
                         style={{ backgroundColor: c }}
                       />
                     ))}
@@ -421,6 +422,17 @@ function App() {
           </div>
 
           <div className="flex items-center gap-2">
+            <ToolbarBtn
+              onClick={() => {
+                if (!document.fullscreenElement)
+                  document.documentElement.requestFullscreen();
+                else document.exitFullscreen();
+              }}
+              tip={t.tips.focus}
+              down
+            >
+              <Maximize2 size={16} />
+            </ToolbarBtn>
             <div
               className="relative h-10 flex items-center"
               onMouseEnter={() => setShowDownload(true)}
@@ -430,7 +442,7 @@ function App() {
                 <FileDown size={20} />
               </button>
               {showDownload && (
-                <div className="absolute top-full right-0 bg-white border border-[#dad4c9] py-1 w-32 z-50 rounded-sm shadow-xl">
+                <div className="absolute top-full right-0 bg-white border border-[#dad4c9] py-1 w-32 z-50 rounded-sm">
                   <button
                     onClick={() => exportFile("pdf")}
                     className="w-full flex items-center gap-3 px-4 py-2.5 text-[10px] font-bold text-[#4a463c] hover:bg-[#efebe4] hover:text-black transition-colors uppercase tracking-widest cursor-pointer font-sans"
@@ -446,13 +458,6 @@ function App() {
                 </div>
               )}
             </div>
-            <ToolbarBtn
-              onClick={() => document.documentElement.requestFullscreen()}
-              tip={t.tips.focus}
-              down
-            >
-              <Maximize2 size={16} />
-            </ToolbarBtn>
             <button
               onClick={() => setExpanded(!expanded)}
               className={`flex items-center px-4 h-10 rounded-sm ml-4 transition-all cursor-pointer ${
@@ -565,7 +570,7 @@ function App() {
                     }
                     className={`px-4 py-1 text-[10px] font-bold transition-all cursor-pointer ${
                       curLine === v.toString()
-                        ? "bg-white text-black shadow-none"
+                        ? "bg-white text-black rounded-sm shadow-none"
                         : "text-[#8c887d] hover:bg-white/40"
                     }`}
                   >
@@ -579,7 +584,7 @@ function App() {
               <span className="text-[9px] font-bold text-[#3a362c] uppercase mb-3 tracking-[0.15em] opacity-80">
                 {t.layout}
               </span>
-              <div className="flex items-center gap-3 bg-[#efebe4] px-4 h-10 rounded-sm border border-black/5 shadow-none">
+              <div className="flex items-center gap-3 bg-[#efebe4] px-4 h-10 rounded-sm shadow-none border border-black/5">
                 {[
                   { k: "t", v: mT, s: setMT },
                   { k: "b", v: mB, s: setMB },
@@ -597,7 +602,7 @@ function App() {
                         onChange={(e) =>
                           m.s(Number(e.target.value.replace(/\D/g, "")))
                         }
-                        className="w-4 h-7 text-center text-[11px] font-medium outline-none bg-transparent"
+                        className="w-4 h-7 text-center text-[11px] font-medium outline-none bg-transparent font-sans"
                       />
                       <span className="text-[8px] font-bold text-[#8c887d]">
                         CM
@@ -612,7 +617,7 @@ function App() {
                     setML(3);
                     setMR(2);
                   }}
-                  className="h-7 px-4 text-[9px] font-bold bg-black text-white rounded-sm uppercase tracking-widest active:scale-95 transition-all ml-1 cursor-pointer"
+                  className="h-7 px-4 text-[9px] font-bold bg-black text-white rounded-sm uppercase tracking-widest active:scale-95 transition-all shadow-none ml-1 cursor-pointer font-sans"
                 >
                   {t.abnt}
                 </button>
@@ -626,14 +631,14 @@ function App() {
         onContextMenu={onContextMenu}
         className="flex-1 overflow-y-auto no-scrollbar py-6 bg-[#f0ede9]"
       >
-        <div className="flex justify-center min-h-full pb-20">
+        <div className="flex justify-center min-h-full pb-10">
           <EditorContent editor={editor} />
         </div>
       </main>
 
       {contextMenu && (
         <div
-          className="fixed z-[100] bg-[#fcfaf7] border border-[#dad4c9] w-56 py-1 rounded-sm select-none shadow-none"
+          className="fixed z-50 bg-[#fcfaf7] border border-[#dad4c9] w-56 py-1 rounded-sm select-none shadow-none"
           style={{ top: contextMenu.y, left: contextMenu.x }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -680,15 +685,15 @@ function App() {
 
       {showSettings && (
         <div
-          className="fixed inset-0 z-100 flex items-center justify-center bg-black/10 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 backdrop-blur-sm"
           onClick={() => setShowSettings(false)}
         >
           <div
-            className="bg-white w-[340px] p-6 rounded-sm border border-[#dad4c9] shadow-none"
+            className="bg-white w-85 p-6 rounded-sm border border-[#dad4c9] shadow-none"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-8">
-              <h2 className="text-[12px] font-bold tracking-[0.2em] uppercase text-black">
+              <h2 className="text-[12px] font-bold tracking-[0.2em] uppercase text-black font-sans">
                 {t.settings}
               </h2>
               <button
@@ -700,13 +705,13 @@ function App() {
             </div>
             <div className="space-y-6">
               <div>
-                <label className="flex items-center gap-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">
+                <label className="flex items-center gap-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3 font-sans">
                   <Globe size={12} /> {t.lang}
                 </label>
                 <div className="grid grid-cols-2 gap-px bg-[#dad4c9] border border-[#dad4c9]">
                   <button
                     onClick={() => setLang("pt")}
-                    className={`py-4 text-[10px] font-bold cursor-pointer font-sans ${
+                    className={`py-4 text-[10px] font-bold cursor-pointer font-sans shadow-none ${
                       lang === "pt"
                         ? "bg-white text-black"
                         : "bg-[#fcfaf7] text-gray-400"
@@ -716,7 +721,7 @@ function App() {
                   </button>
                   <button
                     onClick={() => setLang("en")}
-                    className={`py-4 text-[10px] font-bold cursor-pointer font-sans ${
+                    className={`py-4 text-[10px] font-bold cursor-pointer font-sans shadow-none ${
                       lang === "en"
                         ? "bg-white text-black"
                         : "bg-[#fcfaf7] text-gray-400"
@@ -728,9 +733,9 @@ function App() {
               </div>
               <button
                 onClick={() => setShowSettings(false)}
-                className="w-full py-3 text-[11px] font-bold bg-black text-white uppercase tracking-widest rounded-sm font-sans"
+                className="w-full py-3 text-[11px] font-bold bg-black text-white uppercase tracking-widest rounded-sm font-sans shadow-none"
               >
-                {t.close}
+                OK
               </button>
             </div>
           </div>
@@ -747,7 +752,7 @@ function ToolbarBtn({ children, onClick, active, tip, down }: ToolbarBtnProps) {
         onClick={onClick}
         className={`p-2.5 rounded-sm transition-all cursor-pointer shadow-none ${
           active
-            ? "bg-white text-black border border-black/5"
+            ? "bg-white text-black shadow-none border border-black/5"
             : "text-[#8c887d] hover:text-black hover:bg-white/70"
         }`}
       >
@@ -770,7 +775,7 @@ function ContextBtn({ children, onClick, icon }: ContextBtnProps) {
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-4 px-5 py-3 text-[11px] font-bold text-[#4a463c] hover:bg-[#efebe4] hover:text-black transition-colors text-left uppercase tracking-widest cursor-pointer font-sans"
+      className="w-full flex items-center gap-4 px-5 py-3 text-[11px] font-bold text-[#4a463c] hover:bg-[#efebe4] hover:text-black transition-colors text-left uppercase tracking-widest cursor-pointer font-sans shadow-none border-none"
     >
       <span className="opacity-40">{icon}</span> {children}
     </button>
