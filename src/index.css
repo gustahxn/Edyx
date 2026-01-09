@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+:root {
+  --edyx-mt: 3cm;
+  --edyx-mb: 2cm;
+  --edyx-ml: 3cm;
+  --edyx-mr: 2cm;
+  --a4-width: 794px;
+  --a4-height: 1123px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  background-color: #f0ede9; 
+}
+
+.ProseMirror {
+  outline: none;
+  background-color: #ffffff;
+  border: 1px solid rgba(0,0,0,0.05);
+  margin: 16px auto 0 auto; 
+  width: var(--a4-width);
+  min-height: var(--a4-height);
+  padding: var(--edyx-mt) var(--edyx-mr) var(--edyx-mb) var(--edyx-ml);
+  
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  line-height: 1.5;
+
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent calc(var(--a4-height) - 1px),
+    #f0ede9 calc(var(--a4-height) - 1px),
+    #f0ede9 var(--a4-height)
+  );
+  background-size: 100% var(--a4-height);
+}
+
+.ProseMirror p {
+  margin: 0;
+  min-height: 1em;
+}
+
+.ProseMirror ul {
+  list-style-type: disc;
+  list-style-position: outside;
+  padding-left: 1.5rem;
+}
+
+.ProseMirror ol {
+  list-style-type: decimal;
+  list-style-position: outside;
+  padding-left: 1.5rem;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+::selection {
+  background-color: #e6e0d5;
+}
