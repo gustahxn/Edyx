@@ -27,9 +27,20 @@ app.post("/export/pdf", async (req, res) => {
               line-height: 1.5; 
               color: #1a1a1a;
               margin: 0;
+              padding: 0;
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+              white-space: pre-wrap;
             }
-            p { margin: 0; padding: 0; min-height: 1em; }
+            p { 
+              margin: 0; 
+              padding: 0; 
+              min-height: 1em; 
+              display: block;
+              width: 100%; 
+            }
             ul, ol { padding-left: 1.5rem; }
+            img { max-width: 100%; height: auto; }
           </style>
         </head>
         <body>${content}</body>
@@ -37,7 +48,10 @@ app.post("/export/pdf", async (req, res) => {
     `;
 
     await page.setContent(html, { waitUntil: "networkidle0" });
-    const pdf = await page.pdf({ format: "A4", printBackground: true });
+    const pdf = await page.pdf({
+      format: "A4",
+      printBackground: true,
+    });
 
     await browser.close();
     res.contentType("application/pdf");
@@ -50,16 +64,17 @@ app.post("/export/pdf", async (req, res) => {
 app.post("/export/docx", async (req, res) => {
   try {
     const { content, margins } = req.body;
+    const fullHtml = `<!DOCTYPE html><html><body>${content}</body></html>`;
 
-    const fileBuffer = await HTMLtoDOCX(content, null, {
+    const fileBuffer = await HTMLtoDOCX(fullHtml, null, {
       table: { row: { cantSplit: true } },
       footer: true,
       pageNumber: true,
       margins: {
-        top: margins.t * 567,
-        right: margins.r * 567,
-        bottom: margins.b * 567,
-        left: margins.l * 567,
+        top: Math.round(margins.t * 567),
+        right: Math.round(margins.r * 567),
+        bottom: Math.round(margins.b * 567),
+        left: Math.round(margins.l * 567),
       },
     });
 

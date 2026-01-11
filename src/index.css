@@ -26,8 +26,9 @@ body {
   min-height: var(--a4-height);
   padding: var(--edyx-mt) var(--edyx-mr) var(--edyx-mb) var(--edyx-ml);
   white-space: pre-wrap !important;
-  word-wrap: break-word !important;
+  word-break: break-word !important;
   overflow-wrap: break-word !important;
+  box-sizing: border-box;
   line-height: 1.5;
   background-image: repeating-linear-gradient(
     to bottom,
@@ -37,6 +38,11 @@ body {
     #f0ede9 var(--a4-height)
   );
   background-size: 100% var(--a4-height);
+}
+
+.ProseMirror p {
+  margin: 0;
+  width: 100%;
 }
 
 .ProseMirror ul {

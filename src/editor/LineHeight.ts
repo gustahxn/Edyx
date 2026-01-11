@@ -14,7 +14,7 @@ export const LineHeight = Extension.create({
   addGlobalAttributes() {
     return [
       {
-        types: ["paragraph", "heading"],
+        types: ["paragraph", "heading", "listItem"],
         attributes: {
           lineHeight: {
             default: null,
@@ -33,12 +33,18 @@ export const LineHeight = Extension.create({
       setLineHeight:
         (lineHeight) =>
         ({ commands }) => {
-          return commands.updateAttributes("paragraph", { lineHeight });
+          return (
+            commands.updateAttributes("paragraph", { lineHeight }) &&
+            commands.updateAttributes("listItem", { lineHeight })
+          );
         },
       unsetLineHeight:
         () =>
         ({ commands }) => {
-          return commands.updateAttributes("paragraph", { lineHeight: null });
+          return (
+            commands.updateAttributes("paragraph", { lineHeight: null }) &&
+            commands.updateAttributes("listItem", { lineHeight: null })
+          );
         },
     };
   },

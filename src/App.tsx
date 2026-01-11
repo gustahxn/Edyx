@@ -257,7 +257,7 @@ function App() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `Documento_Edyx.${type === "pdf" ? "pdf" : "docx"}`;
+      a.download = `Documento_Edyx.${type}`;
       a.click();
       window.URL.revokeObjectURL(url);
     } catch {
@@ -279,7 +279,7 @@ function App() {
 
   return (
     <div className="h-screen w-full flex flex-col bg-[#f0ede9] text-[#1a1a1a] font-sans selection:bg-[#e6e0d5]">
-      <header className="bg-[#fcfaf7] border-b border-[#dad4c9] z-40 select-none relative shadow-none">
+      <header className="bg-[#fcfaf7] border-b border-[#dad4c9] z-40 select-none relative">
         <div className="max-w-screen-2xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <div className="flex items-center pr-2">
@@ -306,7 +306,7 @@ function App() {
                 <Redo2 size={15} />
               </ToolbarBtn>
             </div>
-            <div className="flex bg-[#efebe4] p-1 rounded-sm gap-0.5 ml-2 border border-black/5 shadow-none">
+            <div className="flex bg-[#efebe4] p-1 rounded-sm gap-0.5 ml-2 border border-black/5">
               <ToolbarBtn
                 onClick={() => editor.chain().focus().toggleBold().run()}
                 active={editor.isActive("bold")}
@@ -337,7 +337,7 @@ function App() {
               <div className="flex flex-col">
                 <div className="flex items-center gap-1.5 mb-1 text-[#6a665c]">
                   <Type size={10} strokeWidth={2} />
-                  <span className="text-[8px] font-bold uppercase tracking-widest">
+                  <span className="text-[8px] font-bold uppercase">
                     {t.font}
                   </span>
                 </div>
@@ -346,7 +346,7 @@ function App() {
                   onChange={(e) =>
                     editor.chain().focus().setFontFamily(e.target.value).run()
                   }
-                  className="bg-transparent text-[12px] font-bold outline-none cursor-pointer appearance-none text-black w-28 tracking-tight font-sans"
+                  className="bg-transparent text-[12px] font-bold outline-none cursor-pointer appearance-none text-black w-28 tracking-tight"
                 >
                   <option value="Arial">Arial</option>
                   <option value="Times New Roman">Times New Roman</option>
@@ -354,7 +354,7 @@ function App() {
               </div>
               <div className="w-px h-8 bg-[#dad4c9] mx-1" />
               <div className="flex flex-col">
-                <span className="text-[8px] font-bold text-[#6a665c] uppercase mb-1 tracking-widest">
+                <span className="text-[8px] font-bold text-[#6a665c] uppercase mb-1">
                   {t.size}
                 </span>
                 <select
@@ -362,7 +362,7 @@ function App() {
                   onChange={(e) =>
                     editor.chain().focus().setFontSize(e.target.value).run()
                   }
-                  className="bg-transparent text-[12px] font-bold outline-none cursor-pointer appearance-none text-black w-14 text-center font-sans"
+                  className="bg-transparent text-[12px] font-bold outline-none cursor-pointer appearance-none text-black w-14 text-center"
                 >
                   {fontSizes.map((s) => (
                     <option key={s} value={s}>
@@ -380,9 +380,9 @@ function App() {
                     e.stopPropagation();
                     setShowColor(!showColor);
                   }}
-                  className="flex flex-col items-start group cursor-pointer shadow-none"
+                  className="flex flex-col items-start group cursor-pointer"
                 >
-                  <span className="text-[8px] font-bold text-[#6a665c] uppercase mb-1 tracking-widest group-hover:text-black">
+                  <span className="text-[8px] font-bold text-[#6a665c] uppercase mb-1 group-hover:text-black">
                     {t.color}
                   </span>
                   <div
@@ -413,14 +413,13 @@ function App() {
                 className="flex flex-col items-start group cursor-pointer"
                 onClick={() => editor.chain().focus().toggleHighlight().run()}
               >
-                <span className="text-[8px] font-bold text-[#6a665c] uppercase mb-1 tracking-widest group-hover:text-black">
+                <span className="text-[8px] font-bold text-[#6a665c] uppercase mb-1 group-hover:text-black">
                   {t.highlight}
                 </span>
                 <div className="w-10 h-1.5 border border-black/10 bg-[#ffe203]" />
               </div>
             </div>
           </div>
-
           <div className="flex items-center gap-2">
             <ToolbarBtn
               onClick={() => {
@@ -445,13 +444,13 @@ function App() {
                 <div className="absolute top-full right-0 bg-white border border-[#dad4c9] py-1 w-32 z-50 rounded-sm">
                   <button
                     onClick={() => exportFile("pdf")}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 text-[10px] font-bold text-[#4a463c] hover:bg-[#efebe4] hover:text-black transition-colors uppercase tracking-widest cursor-pointer font-sans"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-[10px] font-bold text-[#4a463c] hover:bg-[#efebe4] hover:text-black transition-colors uppercase cursor-pointer"
                   >
                     <Download size={12} /> {t.tips.pdf}
                   </button>
                   <button
                     onClick={() => exportFile("docx")}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 text-[10px] font-bold text-[#4a463c] hover:bg-[#efebe4] hover:text-black transition-colors uppercase tracking-widest cursor-pointer font-sans"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-[10px] font-bold text-[#4a463c] hover:bg-[#efebe4] hover:text-black transition-colors uppercase cursor-pointer"
                   >
                     <FileText size={12} /> {t.tips.docx}
                   </button>
@@ -484,10 +483,10 @@ function App() {
         >
           <div className="max-w-screen-2xl mx-auto px-6 h-full flex items-center gap-16">
             <div className="flex flex-col items-start">
-              <span className="text-[9px] font-bold text-[#3a362c] uppercase mb-3 tracking-[0.15em] opacity-80">
+              <span className="text-[9px] font-bold text-[#3a362c] uppercase mb-3 opacity-90">
                 {t.structure}
               </span>
-              <div className="flex bg-[#efebe4] p-1 rounded-sm gap-0.5 border border-black/5 shadow-none">
+              <div className="flex bg-[#efebe4] p-1 rounded-sm gap-0.5 border border-black/5">
                 <ToolbarBtn
                   onClick={() =>
                     editor.chain().focus().toggleBulletList().run()
@@ -510,10 +509,10 @@ function App() {
             </div>
             <div className="w-px h-12 bg-[#dad4c9]" />
             <div className="flex flex-col items-start">
-              <span className="text-[9px] font-bold text-[#3a362c] uppercase mb-3 tracking-[0.15em] opacity-80">
+              <span className="text-[9px] font-bold text-[#3a362c] uppercase mb-3 opacity-90">
                 {t.paragraph}
               </span>
-              <div className="flex bg-[#efebe4] p-1 rounded-sm gap-0.5 border border-black/5 shadow-none">
+              <div className="flex bg-[#efebe4] p-1 rounded-sm gap-0.5 border border-black/5">
                 <ToolbarBtn
                   onClick={() =>
                     editor.chain().focus().setTextAlign("left").run()
@@ -558,10 +557,10 @@ function App() {
             </div>
             <div className="w-px h-12 bg-[#dad4c9]" />
             <div className="flex flex-col items-start">
-              <span className="text-[9px] font-bold text-[#3a362c] uppercase mb-3 tracking-[0.15em] opacity-80">
+              <span className="text-[9px] font-bold text-[#3a362c] uppercase mb-3 opacity-90">
                 {t.spacing}
               </span>
-              <div className="flex bg-[#efebe4] p-1 rounded-sm gap-px border border-black/5 shadow-none">
+              <div className="flex bg-[#efebe4] p-1 rounded-sm gap-px border border-black/5">
                 {[1.0, 1.5, 2.0].map((v) => (
                   <button
                     key={v}
@@ -581,10 +580,10 @@ function App() {
             </div>
             <div className="w-px h-12 bg-[#dad4c9]" />
             <div className="flex flex-col items-start">
-              <span className="text-[9px] font-bold text-[#3a362c] uppercase mb-3 tracking-[0.15em] opacity-80">
+              <span className="text-[9px] font-bold text-[#3a362c] uppercase mb-3 opacity-90">
                 {t.layout}
               </span>
-              <div className="flex items-center gap-3 bg-[#efebe4] px-4 h-10 rounded-sm shadow-none border border-black/5">
+              <div className="flex items-center gap-3 bg-[#efebe4] px-4 h-10 rounded-sm border border-black/5">
                 {[
                   { k: "t", v: mT, s: setMT },
                   { k: "b", v: mB, s: setMB },
@@ -602,7 +601,7 @@ function App() {
                         onChange={(e) =>
                           m.s(Number(e.target.value.replace(/\D/g, "")))
                         }
-                        className="w-4 h-7 text-center text-[11px] font-medium outline-none bg-transparent font-sans"
+                        className="w-4 h-7 text-center text-[11px] font-medium outline-none bg-transparent"
                       />
                       <span className="text-[8px] font-bold text-[#8c887d]">
                         CM
@@ -617,7 +616,7 @@ function App() {
                     setML(3);
                     setMR(2);
                   }}
-                  className="h-7 px-4 text-[9px] font-bold bg-black text-white rounded-sm uppercase tracking-widest active:scale-95 transition-all shadow-none ml-1 cursor-pointer font-sans"
+                  className="h-7 px-4 text-[9px] font-bold bg-black text-white rounded-sm uppercase active:scale-95 transition-all ml-1 cursor-pointer"
                 >
                   {t.abnt}
                 </button>
@@ -629,7 +628,7 @@ function App() {
 
       <main
         onContextMenu={onContextMenu}
-        className="flex-1 overflow-y-auto no-scrollbar py-6 bg-[#f0ede9]"
+        className="flex-1 overflow-y-auto no-scrollbar py-6"
       >
         <div className="flex justify-center min-h-full pb-10">
           <EditorContent editor={editor} />
@@ -638,7 +637,7 @@ function App() {
 
       {contextMenu && (
         <div
-          className="fixed z-50 bg-[#fcfaf7] border border-[#dad4c9] w-56 py-1 rounded-sm select-none shadow-none"
+          className="fixed z-50 bg-[#fcfaf7] border border-[#dad4c9] w-56 py-1 rounded-sm select-none"
           style={{ top: contextMenu.y, left: contextMenu.x }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -689,11 +688,11 @@ function App() {
           onClick={() => setShowSettings(false)}
         >
           <div
-            className="bg-white w-85 p-6 rounded-sm border border-[#dad4c9] shadow-none"
+            className="bg-white w-85 p-6 rounded-sm border border-[#dad4c9]"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-8">
-              <h2 className="text-[12px] font-bold tracking-[0.2em] uppercase text-black font-sans">
+              <h2 className="text-[12px] font-bold uppercase text-black">
                 {t.settings}
               </h2>
               <button
@@ -705,13 +704,13 @@ function App() {
             </div>
             <div className="space-y-6">
               <div>
-                <label className="flex items-center gap-2 text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3 font-sans">
+                <label className="flex items-center gap-2 text-[10px] font-bold text-gray-500 uppercase mb-3">
                   <Globe size={12} /> {t.lang}
                 </label>
                 <div className="grid grid-cols-2 gap-px bg-[#dad4c9] border border-[#dad4c9]">
                   <button
                     onClick={() => setLang("pt")}
-                    className={`py-4 text-[10px] font-bold cursor-pointer font-sans shadow-none ${
+                    className={`py-4 text-[10px] font-bold cursor-pointer ${
                       lang === "pt"
                         ? "bg-white text-black"
                         : "bg-[#fcfaf7] text-gray-400"
@@ -721,7 +720,7 @@ function App() {
                   </button>
                   <button
                     onClick={() => setLang("en")}
-                    className={`py-4 text-[10px] font-bold cursor-pointer font-sans shadow-none ${
+                    className={`py-4 text-[10px] font-bold cursor-pointer ${
                       lang === "en"
                         ? "bg-white text-black"
                         : "bg-[#fcfaf7] text-gray-400"
@@ -733,7 +732,7 @@ function App() {
               </div>
               <button
                 onClick={() => setShowSettings(false)}
-                className="w-full py-3 text-[11px] font-bold bg-black text-white uppercase tracking-widest rounded-sm font-sans shadow-none"
+                className="cursor-pointer w-full py-3 text-[11px] font-bold bg-black text-white uppercase rounded-sm"
               >
                 OK
               </button>
@@ -750,9 +749,9 @@ function ToolbarBtn({ children, onClick, active, tip, down }: ToolbarBtnProps) {
     <div className="relative group">
       <button
         onClick={onClick}
-        className={`p-2.5 rounded-sm transition-all cursor-pointer shadow-none ${
+        className={`p-2.5 rounded-sm transition-all cursor-pointer ${
           active
-            ? "bg-white text-black shadow-none border border-black/5"
+            ? "bg-white text-black border border-black/5"
             : "text-[#8c887d] hover:text-black hover:bg-white/70"
         }`}
       >
@@ -762,7 +761,7 @@ function ToolbarBtn({ children, onClick, active, tip, down }: ToolbarBtnProps) {
         <div
           className={`absolute left-1/2 -translate-x-1/2 ${
             down ? "top-full mt-2" : "bottom-full mb-2"
-          } px-2.5 py-1.5 bg-[#ffffff] border border-[#dad4c9] text-[#5a564c] text-[10px] font-medium rounded-sm opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none uppercase tracking-widest z-50 shadow-none whitespace-nowrap font-sans`}
+          } px-2.5 py-1.5 bg-white border border-[#dad4c9] text-[#5a564c] text-[10px] font-medium rounded-sm opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none uppercase z-50 whitespace-nowrap`}
         >
           {tip}
         </div>
@@ -775,7 +774,7 @@ function ContextBtn({ children, onClick, icon }: ContextBtnProps) {
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-4 px-5 py-3 text-[11px] font-bold text-[#4a463c] hover:bg-[#efebe4] hover:text-black transition-colors text-left uppercase tracking-widest cursor-pointer font-sans shadow-none border-none"
+      className="w-full flex items-center gap-4 px-5 py-3 text-[11px] font-bold text-[#4a463c] hover:bg-[#efebe4] hover:text-black transition-colors text-left uppercase cursor-pointer border-none"
     >
       <span className="opacity-40">{icon}</span> {children}
     </button>
